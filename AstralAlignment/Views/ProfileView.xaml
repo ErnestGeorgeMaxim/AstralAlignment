@@ -1,0 +1,294 @@
+﻿<UserControl x:Class="AstralAlignment.Views.ProfileView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AstralAlignment.Views"
+             mc:Ignorable="d" 
+             Height="Auto" Width="Auto">
+    <UserControl.Background>
+        <ImageBrush ImageSource="/Images/background-image.jpg" Stretch="Fill"/>
+    </UserControl.Background>
+    <UserControl.Resources>
+        <Style x:Key="StyledButton" TargetType="Button">
+            <Setter Property="FontFamily" Value="Castellar"/>
+            <Setter Property="Foreground" Value="#FFFFB200"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="#FF404682"/>
+            <Setter Property="BorderBrush" Value="#FFFFB200"/>
+            <Setter Property="BorderThickness" Value="3"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <!-- Blur Effect (Glow) -->
+                            <Border x:Name="GlowEffect"
+                                CornerRadius="10"
+                                Background="Transparent"
+                                Width="210"
+                                Height="60"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="White" BlurRadius="47" ShadowDepth="0" RenderingBias="Quality"/>
+                                </Border.Effect>
+                            </Border>
+                            <!-- Main Button -->
+                            <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="3"
+                                CornerRadius="10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <!-- Hover & Click Effects -->
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF505CA5"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF303560"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Additional style for smaller buttons -->
+        <Style x:Key="NavigationButton" TargetType="Button" BasedOn="{StaticResource StyledButton}">
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Border x:Name="GlowEffect"
+                                CornerRadius="5"
+                                Background="Transparent"
+                                Width="45"
+                                Height="35"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="White" BlurRadius="15" ShadowDepth="0" RenderingBias="Quality"/>
+                                </Border.Effect>
+                            </Border>
+                            <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="2"
+                                CornerRadius="5">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF505CA5"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF303560"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Style for TextBox -->
+        <!-- Style for TextBox -->
+        <Style x:Key="StyledTextBox" TargetType="TextBox">
+            <Setter Property="FontFamily" Value="Castellar"/>
+            <Setter Property="Foreground" Value="#FFFFB200"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Background" Value="#66404682"/>
+            <Setter Property="BorderBrush" Value="#FFFFB200"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <!-- Add this line -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border" 
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="5">
+                            <Border.Effect>
+                                <DropShadowEffect Color="White" BlurRadius="10" ShadowDepth="0" RenderingBias="Quality"/>
+                            </Border.Effect>
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                 Margin="{TemplateBinding Padding}" 
+                                 VerticalAlignment="Center"/>
+                            <!-- Ensure vertical centering -->
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#88404682"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#99404682"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <!-- Wrap the layout in a ViewBox that scales a fixed-size Grid -->
+    <Viewbox Stretch="Uniform">
+        <Grid Width="1024" Height="768" HorizontalAlignment="Center" VerticalAlignment="Top">
+            <TextBlock Text= "Welcome to Astral Alignment" 
+                   FontSize="44" 
+                   HorizontalAlignment="Center" 
+                   Margin="0,58,0,616" 
+                   Foreground="#FFFFB200" 
+                   Width="864" 
+                   FontFamily="Castellar" 
+                   TextAlignment="Center" 
+                   TextWrapping="Wrap" 
+                   FontWeight="Thin">
+                <TextBlock.Effect>
+                    <DropShadowEffect Color="White" BlurRadius="50" RenderingBias="Quality" ShadowDepth="0"/>
+                </TextBlock.Effect>
+            </TextBlock>
+
+            <!-- Main content -->
+            <Grid Margin="52,175,52,100">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Side - User List -->
+                <Border Grid.Column="0" BorderBrush="#FFFFB200" BorderThickness="3" Margin="20,0,10,0" CornerRadius="10" Background="#44404682">
+                    <Border.Effect>
+                        <DropShadowEffect Color="White" BlurRadius="20" ShadowDepth="0" RenderingBias="Quality"/>
+                    </Border.Effect>
+                    <ListBox ItemsSource="{Binding Users}" 
+                             SelectedItem="{Binding SelectedUser, Mode=TwoWay}"
+                             Background="Transparent" 
+                             BorderThickness="0" 
+                             Foreground="#FFFFB200" 
+                             FontFamily="Castellar" 
+                             FontSize="22">
+                        <ListBox.Resources>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Height" Value="40"/>
+                                <Setter Property="Padding" Value="10,5"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="#66505CA5"/>
+                                        <Setter Property="BorderBrush" Value="#FFFFB200"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#44505CA5"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.Resources>
+                    </ListBox>
+                </Border>
+
+                <!-- Right Side - User Creation/Display Panel -->
+                <Grid Grid.Column="1" Margin="10,0,20,0">
+                    <Border BorderBrush="#FFFFB200" BorderThickness="3" CornerRadius="10" Background="#44404682">
+                        <Border.Effect>
+                            <DropShadowEffect Color="White" BlurRadius="20" ShadowDepth="0" RenderingBias="Quality"/>
+                        </Border.Effect>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Image Display Area -->
+                            <Grid Grid.Row="0">
+                                <!-- Display the current zodiac image -->
+                                <Image Source="{Binding CurrentZodiacSign.ImagePath}" Stretch="Uniform" Margin="95,28,95,30"/>
+
+                                <!-- Only show navigation buttons in creation mode -->
+                                <StackPanel Orientation="Horizontal" 
+                                            VerticalAlignment="Bottom" 
+                                            HorizontalAlignment="Center" 
+                                            Margin="0,0,0,135" 
+                                            Visibility="{Binding IsInCreationMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <Button Content="&lt;&lt;" 
+                                            Command="{Binding PrevZodiacCommand}"
+                                            Style="{StaticResource NavigationButton}" 
+                                            Margin="0,0,270,0"/>
+                                    <Button Content="&gt;&gt;" 
+                                            Command="{Binding NextZodiacCommand}"
+                                            Style="{StaticResource NavigationButton}"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Sign name display -->
+                            <TextBlock Grid.Row="1" 
+                                       Text="{Binding CurrentZodiacSign.Name}" 
+                                       HorizontalAlignment="Center" 
+                                       VerticalAlignment="Top" 
+                                       FontFamily="Castellar" 
+                                       FontSize="36" 
+                                       Foreground="#FFFFB200" 
+                                       Margin="0,10,0,10">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="White" BlurRadius="20" ShadowDepth="0" RenderingBias="Quality"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+
+                            <!-- User name input area -->
+                            <!-- User name input area -->
+                            <StackPanel Grid.Row="2" Orientation="Vertical" Margin="50,10,50,30"
+                                Visibility="{Binding IsInCreationMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <TextBlock Text="Enter Your Name:" 
+                                           FontFamily="Castellar" 
+                                           FontSize="20" 
+                                           Foreground="#FFFFB200" 
+                                           HorizontalAlignment="Center" 
+                                           Margin="0,0,0,10">   
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect Color="White" BlurRadius="10" ShadowDepth="0" RenderingBias="Quality"/>
+                                    </TextBlock.Effect>
+                                </TextBlock>
+                                <TextBox Text="{Binding UserNameInput, UpdateSourceTrigger=PropertyChanged}" 
+                                         Style="{StaticResource StyledTextBox}" 
+                                         HorizontalAlignment="Stretch" MaxLines="1">
+                                </TextBox>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+
+            <!-- Bottom Action Buttons -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,686,0,0">
+                <Button Content="CREATE USER" 
+                        Command="{Binding CreateUserCommand}"
+                        Style="{StaticResource StyledButton}" 
+                        Margin="15,0" />
+                <Button Content="DELETE USER" 
+                        Command="{Binding DeleteUserCommand}"
+                        Style="{StaticResource StyledButton}" 
+                        Margin="15,0"/>
+                <Button Content="PLAY" 
+                        Style="{StaticResource StyledButton}" 
+                        Margin="15,0"/>
+                <Button Content="CANCEL" 
+                        Command="{Binding CancelSelectionCommand}" 
+                        Style="{StaticResource StyledButton}" 
+                        Margin="15,0"/>
+            </StackPanel>
+        </Grid>
+    </Viewbox>
+</UserControl>

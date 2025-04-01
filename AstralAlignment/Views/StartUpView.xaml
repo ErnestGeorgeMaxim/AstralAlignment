@@ -1,0 +1,128 @@
+﻿<UserControl x:Class="AstralAlignment.Views.StartUpView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AstralAlignment.Views"
+             mc:Ignorable="d" 
+             Height="Auto" Width="Auto">
+    <UserControl.Background>
+        <ImageBrush ImageSource="/Images/background-image.jpg" Stretch="Fill"/>
+    </UserControl.Background>
+
+    <UserControl.Resources>
+        <!-- Animation for continuous rotation -->
+        <Storyboard x:Key="RotationAnimation" RepeatBehavior="Forever">
+            <DoubleAnimation 
+                Storyboard.TargetName="ZodiacWheel"
+                Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                From="0" To="360" Duration="0:0:30" />
+        </Storyboard>
+
+        <!-- Animation for opacity changes -->
+        <Storyboard x:Key="OpacityAnimation" RepeatBehavior="Forever">
+            <DoubleAnimation 
+                Storyboard.TargetName="ZodiacWheel"
+                Storyboard.TargetProperty="Opacity"
+                From="0.4" To="1.0" Duration="0:0:5" AutoReverse="True" />
+        </Storyboard>
+
+        <!-- Custom Button Style with Rounded Border and Glow -->
+        <Style x:Key="StyledButton" TargetType="Button">
+            <Setter Property="FontFamily" Value="Castellar"/>
+            <Setter Property="Foreground" Value="#FFFFB200"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="#FF404682"/>
+            <Setter Property="BorderBrush" Value="#FFFFB200"/>
+            <Setter Property="BorderThickness" Value="3"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <!-- Blur Effect (Glow) -->
+                            <Border x:Name="GlowEffect"
+                                    CornerRadius="10"
+                                    Background="Transparent"
+                                    Width="210"
+                                    Height="60"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="White" BlurRadius="47" ShadowDepth="0" RenderingBias="Quality"/>
+                                </Border.Effect>
+                            </Border>
+                            <!-- Main Button -->
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="3"
+                                    CornerRadius="10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <!-- Hover & Click Effects -->
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF505CA5"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF303560"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="UserControl.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource RotationAnimation}" />
+            <BeginStoryboard Storyboard="{StaticResource OpacityAnimation}" />
+        </EventTrigger>
+    </UserControl.Triggers>
+
+    <!-- Wrap the layout in a ViewBox that scales a fixed-size Grid (1024x768) -->
+    <Viewbox Stretch="Uniform">
+        <Grid Width="1024" Height="768" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Image x:Name="ZodiacWheel" 
+                   HorizontalAlignment="Center" 
+                   Height="600" 
+                   VerticalAlignment="Center" 
+                   Width="600" 
+                   Source="/Images/zodiac-wheel.png" 
+                   Opacity="0.5" 
+                   OpacityMask="#FFD92222" 
+                   RenderTransformOrigin="0.5,0.5" 
+                   Stretch="Uniform">
+                <Image.RenderTransform>
+                    <RotateTransform Angle="0" />
+                </Image.RenderTransform>
+                <Image.Effect>
+                    <BlurEffect KernelType="Gaussian" RenderingBias="Quality" Radius="8"/>
+                </Image.Effect>
+            </Image>
+            <TextBlock Text="Astral Alignment" 
+                       FontSize="120" 
+                       HorizontalAlignment="Center" 
+                       Margin="0,128,0,312" 
+                       Foreground="#FFFFB200" 
+                       Width="864" 
+                       FontFamily="Castellar" 
+                       TextAlignment="Center" 
+                       TextWrapping="Wrap" 
+                       FontWeight="Thin">
+                <TextBlock.Effect>
+                    <DropShadowEffect Color="White" BlurRadius="50" RenderingBias="Quality" ShadowDepth="0"/>
+                </TextBlock.Effect>
+            </TextBlock>
+            <Button Content="START" 
+                    Margin="412,585,412,133" 
+                    Style="{StaticResource StyledButton}"
+                    Command="{Binding ShowProfileViewCommand}" />
+        </Grid>
+    </Viewbox>
+</UserControl>

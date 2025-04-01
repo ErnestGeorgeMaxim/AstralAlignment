@@ -1,0 +1,23 @@
+﻿<Window x:Class="AstralAlignment.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AstralAlignment.ViewModels"
+        mc:Ignorable="d"
+        Title="AstralAlignment"
+        Height="768" Width="1024"
+        MinWidth="1024" MinHeight="768"
+        WindowStartupLocation="CenterScreen"
+        Icon="/Images/zodiac-wheel.png"
+        ResizeMode="CanResize">
+    <!-- Make sure it's set to CanResize -->
+
+    <Window.DataContext>
+        <local:MainWindowViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <ContentControl Content="{Binding CurrentView}" />
+    </Grid>
+</Window>
