@@ -5,6 +5,212 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AstralAlignment.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" Background="WHite">
-    <Grid/>
+             Height="Auto" Width="Auto">
+
+    <UserControl.Background>
+        <ImageBrush ImageSource="/Images/background-image.jpg" Stretch="Fill"/>
+    </UserControl.Background>
+
+    <UserControl.Resources>
+        <!-- Button style consistent with GameSetUpView -->
+        <Style x:Key="StyledButton" TargetType="Button">
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Background" Value="#FF404682"/>
+            <Setter Property="Foreground" Value="#FFFFB200"/>
+            <Setter Property="FontFamily" Value="Castellar"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="BorderBrush" Value="#FFFFB200"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border.Effect>
+                                <DropShadowEffect Color="White" BlurRadius="10" ShadowDepth="0" RenderingBias="Quality"/>
+                            </Border.Effect>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF5F6BB7"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#FF242D5B"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Updated Card Template -->
+        <DataTemplate x:Key="CardTemplate">
+            <Button Margin="5"
+                    Command="{Binding DataContext.CardClickCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
+                    CommandParameter="{Binding}">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                    <Border x:Name="CardBorder" 
+                                Background="#FF404682" 
+                                BorderBrush="#FFFFB200" 
+                                BorderThickness="2"
+                                CornerRadius="5"
+                                Width="{Binding DataContext.CardWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
+                                Height="{Binding DataContext.CardHeight, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}">    
+                            <Grid>
+                                <!-- Card Back (showing when not flipped) -->
+                                <Image x:Name="CardBack" 
+                               Source="/Images/card-back.png" 
+                               Stretch="Fill" 
+                               Margin="0"/>
+
+                                <!-- Card Front (showing when flipped) -->
+                                <Border x:Name="CardFront"
+                                Visibility="Collapsed"
+                                Background="#FF404682"
+                                Padding="0">
+                                    <Image Source="{Binding ImageSource}" 
+                                   Stretch="Fill" 
+                                   RenderOptions.BitmapScalingMode="HighQuality"/>
+                                </Border>
+
+                                <!-- Match Indicator -->
+                                <Border x:Name="MatchIndicator" Background="#4000FF00" Visibility="Collapsed" CornerRadius="5"/>
+                            </Grid>
+                            <Border.Effect>
+                                <DropShadowEffect Color="White" BlurRadius="5" ShadowDepth="0" RenderingBias="Quality"/>
+                            </Border.Effect>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <DataTrigger Binding="{Binding IsFlipped}" Value="True">
+                                <Setter TargetName="CardBack" Property="Visibility" Value="Collapsed"/>
+                                <Setter TargetName="CardFront" Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsMatched}" Value="True">
+                                <Setter TargetName="MatchIndicator" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="#FF00FF00"/>
+                            </DataTrigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="CardBorder" Property="Background" Value="#FF5F6BB7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Viewbox Stretch="Uniform">
+        <Grid Width="1024" Height="768">
+            <!-- Title -->
+            <TextBlock Text="Astral Alignment"
+                       FontSize="44"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       Margin="0,20,0,0"
+                       Foreground="#FFFFB200"
+                       Width="500"
+                       FontFamily="Castellar"
+                       TextAlignment="Center">
+                <TextBlock.Effect>
+                    <DropShadowEffect Color="White" BlurRadius="50" RenderingBias="Quality" ShadowDepth="0"/>
+                </TextBlock.Effect>
+            </TextBlock>
+
+            <!-- Game Info Panel -->
+            <Border BorderBrush="#FFFFB200" BorderThickness="2" CornerRadius="10" Background="#88404682"
+                    Width="320" Height="70"
+                    HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,80,0,0">
+                <Grid Margin="10,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Moves Counter -->
+                    <StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Center">
+                        <TextBlock Text="Moves" 
+                                   FontFamily="Castellar" 
+                                   FontSize="16" 
+                                   Foreground="#FFFFB200" 
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding Moves}" 
+                                   FontFamily="Castellar" 
+                                   FontSize="20" 
+                                   Foreground="#FFFFB200" 
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Timer -->
+                    <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center">
+                        <TextBlock Text="Time" 
+                                   FontFamily="Castellar" 
+                                   FontSize="16" 
+                                   Foreground="#FFFFB200" 
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding ElapsedTimeDisplay}" 
+                                   FontFamily="Castellar" 
+                                   FontSize="20" 
+                                   Foreground="#FFFFB200" 
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Matches -->
+                    <StackPanel Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Center">
+                        <TextBlock Text="Matches" 
+                                   FontFamily="Castellar" 
+                                   FontSize="16" 
+                                   Foreground="#FFFFB200" 
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding MatchesDisplay}" 
+                                   FontFamily="Castellar" 
+                                   FontSize="20" 
+                                   Foreground="#FFFFB200" 
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Game Board with Viewbox for adjustable sizing -->
+            <Border BorderBrush="#FFFFB200" BorderThickness="3" CornerRadius="10" Background="#44404682"
+                    Margin="50,160,50,100">
+                <Border.Effect>
+                    <DropShadowEffect Color="White" BlurRadius="20" ShadowDepth="0" RenderingBias="Quality"/>
+                </Border.Effect>
+
+                <!-- Added Viewbox to properly scale the game board -->
+                <Viewbox Stretch="Uniform" Margin="20">
+                    <ItemsControl ItemsSource="{Binding Cards}" 
+                                 ItemTemplate="{StaticResource CardTemplate}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Rows="{Binding Game.Rows}" Columns="{Binding Game.Columns}"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Viewbox>
+            </Border>
+
+            <!-- Bottom buttons -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20">
+                <Button Content="NEW GAME"
+                        Command="{Binding NewGameCommand}"
+                        Style="{StaticResource StyledButton}" 
+                        Margin="15,0"/>
+                <Button Content="SAVE GAME"
+                        Command="{Binding SaveGameCommand}"
+                        Style="{StaticResource StyledButton}" 
+                        Margin="15,0"/>
+                <Button Content="EXIT"
+                        Command="{Binding ReturnToSetupCommand}"
+                        Style="{StaticResource StyledButton}" 
+                        Margin="15,0"/>
+            </StackPanel>
+        </Grid>
+    </Viewbox>
 </UserControl>

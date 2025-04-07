@@ -10,6 +10,19 @@
 
   <ItemGroup>
     <None Remove="Images\background-image.jpg" />
+    <None Remove="Images\card-back.png" />
+    <None Remove="Images\constellations\andromeda.png" />
+    <None Remove="Images\constellations\aquila.png" />
+    <None Remove="Images\constellations\cassiopeia.png" />
+    <None Remove="Images\constellations\centaurus.png" />
+    <None Remove="Images\constellations\cygnus.png" />
+    <None Remove="Images\constellations\draco.png" />
+    <None Remove="Images\constellations\hercules.png" />
+    <None Remove="Images\constellations\lyra.png" />
+    <None Remove="Images\constellations\orion.png" />
+    <None Remove="Images\constellations\pegasus.png" />
+    <None Remove="Images\constellations\perseus.png" />
+    <None Remove="Images\constellations\ursamajor.png" />
     <None Remove="Images\game-icon.png" />
     <None Remove="Images\icons\aquarius.png" />
     <None Remove="Images\icons\aries.png" />
@@ -22,10 +35,67 @@
     <None Remove="Images\icons\scorpio.png" />
     <None Remove="Images\icons\taurus.png" />
     <None Remove="Images\icons\virgo.png" />
+    <None Remove="Images\planets\CERES.png" />
+    <None Remove="Images\planets\COMET.png" />
+    <None Remove="Images\planets\DEIMOS.png" />
+    <None Remove="Images\planets\EARTH.png" />
+    <None Remove="Images\planets\ERIS.png" />
+    <None Remove="Images\planets\EUROPA.png" />
+    <None Remove="Images\planets\JUPITER.png" />
+    <None Remove="Images\planets\MARS.png" />
+    <None Remove="Images\planets\MERCURY.png" />
+    <None Remove="Images\planets\MOON.png" />
+    <None Remove="Images\planets\NEPTUNE.png" />
+    <None Remove="Images\planets\PLUTO.png" />
+    <None Remove="Images\planets\SATURN.png" />
+    <None Remove="Images\planets\SEDNA.png" />
+    <None Remove="Images\planets\SUN.png" />
+    <None Remove="Images\planets\URANUS.png" />
+    <None Remove="Images\planets\VENUS.png" />
+    <None Remove="Images\planets\VOID.png" />
     <None Remove="Images\zodiac-wheel.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Images\card-back.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\andromeda.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\aquila.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\cassiopeia.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\centaurus.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\cygnus.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\draco.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\hercules.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\lyra.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\orion.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\pegasus.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\perseus.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\ursamajor.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\icons\taurus.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -65,6 +135,57 @@
     <Content Include="Images\icons\virgo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\planets\ceres.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\planets\comet.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\planets\deimos.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\planets\earth.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\planets\eris.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\planets\europa.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\planets\jupiter.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\planets\mars.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\planets\mercury.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\planets\neptune.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\planets\pluto.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\planets\saturn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\planets\sedna.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\planets\sun.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\planets\uranus.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\planets\venus.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\planets\void.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -83,6 +204,16 @@
     <Content Include="Images\icons\sagittarius.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Images\planets\moon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Images\zodiac\" />
   </ItemGroup>
 
 </Project>

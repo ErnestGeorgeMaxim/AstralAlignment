@@ -281,7 +281,9 @@
                         Command="{Binding DeleteUserCommand}"
                         Style="{StaticResource StyledButton}" 
                         Margin="15,0"/>
-                <Button Content="PLAY" 
+                <Button Content="PLAY"
+                        Command="{Binding PlayGameCommand}"
+                        IsEnabled="{Binding CanPlayGame}"
                         Style="{StaticResource StyledButton}" 
                         Margin="15,0"/>
                 <Button Content="CANCEL" 

@@ -106,7 +106,8 @@ namespace AstralAlignment.ViewModels
         public bool CanCreateUser => IsInCreationMode && !string.IsNullOrWhiteSpace(UserNameInput);
         public bool CanDeleteUser => !IsInCreationMode && SelectedUser != null;
 
-        // Commands
+
+        public ICommand PlayGameCommand { get; }
         public ICommand NextZodiacCommand { get; }
         public ICommand PrevZodiacCommand { get; }
         public ICommand CreateUserCommand { get; }
@@ -116,13 +117,16 @@ namespace AstralAlignment.ViewModels
 
         public ProfileViewModel(UserDataService userDataService)
         {
-            _userDataService = userDataService ?? throw new ArgumentNullException(nameof(userDataService)); 
+            _userDataService = userDataService ?? throw new ArgumentNullException(nameof(userDataService));
 
             // Initialize commands
             NextZodiacCommand = new RelayCommand(_ => NextZodiac());
             PrevZodiacCommand = new RelayCommand(_ => PrevZodiac());
             CreateUserCommand = new RelayCommand(_ => CreateUser(), _ => CanCreateUser);
             DeleteUserCommand = new RelayCommand(_ => DeleteUser(), _ => CanDeleteUser);
+
+            // Initialize the PlayGameCommand
+            PlayGameCommand = new RelayCommand(_ => PlayGame(), _ => CanPlayGame);
 
             // Add this new command for canceling
             CancelSelectionCommand = new RelayCommand(_ => CancelSelection());
@@ -135,6 +139,41 @@ namespace AstralAlignment.ViewModels
 
             // Load users
             LoadUsersAsync();
+        }
+
+        // Add a CanPlayGame property
+        public bool CanPlayGame => SelectedUser != null;
+
+        private void PlayGame()
+        {
+            try
+            {
+                if (SelectedUser != null)
+                {
+                    // Get the MainWindowViewModel
+                    var mainWindow = Application.Current.MainWindow;
+                    var mainVM = mainWindow?.DataContext as MainWindowViewModel;
+
+                    if (mainVM != null)
+                    {
+                        // Create a new GameSetUpView
+                        var gameSetUpView = new Views.GameSetUpView(SelectedUser);
+
+                        // Set it as the current view
+                        mainVM.CurrentView = gameSetUpView;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Could not access MainWindowViewModel.", "Error",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error starting game: {ex.Message}", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         // Add this method to the ProfileViewModel class

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AstralAlignment.Models;
+using AstralAlignment.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,14 +17,12 @@ using System.Windows.Shapes;
 
 namespace AstralAlignment.Views
 {
-    /// <summary>
-    /// Interaction logic for GameView.xaml
-    /// </summary>
     public partial class GameView : UserControl
     {
-        public GameView()
+        public GameView(MemoryGame game)
         {
             InitializeComponent();
+            DataContext = new GameViewModel(game);
         }
     }
 }
