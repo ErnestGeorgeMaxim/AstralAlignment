@@ -6,18 +6,28 @@
         xmlns:local="clr-namespace:AstralAlignment.ViewModels"
         mc:Ignorable="d"
         Title="AstralAlignment"
+        WindowState="Maximized"
+        WindowStyle="None"
         Height="768" Width="1024"
         MinWidth="1024" MinHeight="768"
         WindowStartupLocation="CenterScreen"
-        Icon="/Images/zodiac-wheel.png"
+        Icon="/Images/game-icon.png"
         ResizeMode="CanResize">
-    <!-- Make sure it's set to CanResize -->
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
 
     <Window.DataContext>
         <local:MainWindowViewModel/>
     </Window.DataContext>
 
-    <Grid>
+    <Grid x:Name="MainGrid">
         <ContentControl Content="{Binding CurrentView}" />
+
+        <!-- Dialog overlay that appears on top of everything -->
+        <ContentControl Content="{Binding DialogContent}" 
+                      Visibility="{Binding HasDialogContent, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                      Panel.ZIndex="100"/>
     </Grid>
 </Window>

@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              Height="Auto" Width="Auto">
     <UserControl.Background>
-        <ImageBrush ImageSource="/Images/background-image.jpg" Stretch="Fill"/>
+        <ImageBrush ImageSource="/Images/background-image.png" Stretch="Fill"/>
     </UserControl.Background>
 
     <UserControl.Resources>

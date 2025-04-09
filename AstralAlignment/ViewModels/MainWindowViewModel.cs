@@ -20,9 +20,30 @@ namespace AstralAlignment.ViewModels
             }
         }
 
+        private object _dialogContent;
+        public object DialogContent
+        {
+            get => _dialogContent;
+            set
+            {
+                _dialogContent = value;
+                OnPropertyChanged(nameof(DialogContent));
+                OnPropertyChanged(nameof(HasDialogContent));
+            }
+        }
+
+        public bool HasDialogContent => DialogContent != null;
+
+        // Method to clear dialog content
+        public void ClearDialog()
+        {
+            DialogContent = null;
+        }
+
         public ICommand ShowStartUpViewCommand { get; }
         public ICommand ShowProfileViewCommand { get; }
         public ICommand ShowGameSetUpViewCommand { get; }
+        public ICommand QuitCommand { get; } // New command for quitting the application
 
         public MainWindowViewModel()
         {
@@ -53,6 +74,19 @@ namespace AstralAlignment.ViewModels
                 }
             });
 
+            // Add QuitCommand for exiting the application
+            QuitCommand = new RelayCommand(_ => {
+                MessageBoxResult result = MessageBox.Show("Are you sure you want to quit?",
+                    "Quit Application",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    Application.Current.Shutdown();
+                }
+            });
+
             // Set initial view
             CurrentView = new StartUpView();
 
@@ -60,6 +94,7 @@ namespace AstralAlignment.ViewModels
             Application.Current.Resources["ShowStartUpViewCommand"] = ShowStartUpViewCommand;
             Application.Current.Resources["ShowProfileViewCommand"] = ShowProfileViewCommand;
             Application.Current.Resources["ShowGameSetUpViewCommand"] = ShowGameSetUpViewCommand;
+            Application.Current.Resources["QuitCommand"] = QuitCommand; // Register quit command
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

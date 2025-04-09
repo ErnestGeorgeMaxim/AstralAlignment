@@ -9,20 +9,27 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Images\background-image.jpg" />
+    <None Remove="Images\background-image.png" />
+    <None Remove="Images\background.jpg" />
     <None Remove="Images\card-back.png" />
     <None Remove="Images\constellations\andromeda.png" />
     <None Remove="Images\constellations\aquila.png" />
+    <None Remove="Images\constellations\bootes.png" />
+    <None Remove="Images\constellations\canismajor.png" />
     <None Remove="Images\constellations\cassiopeia.png" />
     <None Remove="Images\constellations\centaurus.png" />
+    <None Remove="Images\constellations\cepheus.png" />
     <None Remove="Images\constellations\cygnus.png" />
+    <None Remove="Images\constellations\delphinus.png" />
     <None Remove="Images\constellations\draco.png" />
     <None Remove="Images\constellations\hercules.png" />
+    <None Remove="Images\constellations\lacerta.png" />
     <None Remove="Images\constellations\lyra.png" />
     <None Remove="Images\constellations\orion.png" />
     <None Remove="Images\constellations\pegasus.png" />
     <None Remove="Images\constellations\perseus.png" />
     <None Remove="Images\constellations\ursamajor.png" />
+    <None Remove="Images\constellations\vulpecula.png" />
     <None Remove="Images\game-icon.png" />
     <None Remove="Images\icons\aquarius.png" />
     <None Remove="Images\icons\aries.png" />
@@ -54,6 +61,49 @@
     <None Remove="Images\planets\VENUS.png" />
     <None Remove="Images\planets\VOID.png" />
     <None Remove="Images\zodiac-wheel.png" />
+    <None Remove="Images\zodiac\aquarius.png" />
+    <None Remove="Images\zodiac\aries.png" />
+    <None Remove="Images\zodiac\cancer.png" />
+    <None Remove="Images\zodiac\gemini.png" />
+    <None Remove="Images\zodiac\leo.png" />
+    <None Remove="Images\zodiac\libra.png" />
+    <None Remove="Images\zodiac\sagittarius.png" />
+    <None Remove="Images\zodiac\scorpio.png" />
+    <None Remove="Images\zodiac\taurus.png" />
+    <None Remove="Images\zodiac\virgo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Images\background-image.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\background.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\bootes.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\canismajor.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\cepheus.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\delphinus.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\lacerta.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\constellations\vulpecula.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\game-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\zodiac\aquarius.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -102,10 +152,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Images\background-image.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\game-icon.png">
+    <Content Include="Images\game-icon2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\icons\aries.png">
@@ -210,10 +257,33 @@
     <Content Include="Images\planets\moon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Images\zodiac\" />
+    <Content Include="Images\zodiac\aries.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\zodiac\cancer.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\zodiac\gemini.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\zodiac\leo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\zodiac\libra.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\zodiac\sagittarius.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\zodiac\scorpio.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\zodiac\taurus.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\zodiac\virgo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

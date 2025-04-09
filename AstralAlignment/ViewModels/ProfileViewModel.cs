@@ -294,14 +294,56 @@ namespace AstralAlignment.ViewModels
         {
             if (SelectedUser != null)
             {
-                var result = MessageBox.Show($"Are you sure you want to delete {SelectedUser.Name}?",
-                    "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-                if (result == MessageBoxResult.Yes)
+                // Create the delete confirmation overlay
+                var deleteOverlay = new Views.DeleteUserConfirmationDialog(SelectedUser);
+                deleteOverlay.DecisionMade += async (sender, confirmed) =>
                 {
-                    Users.Remove(SelectedUser);
-                    await SaveUsersAsync();
-                    SelectedUser = Users.FirstOrDefault();
+                    if (confirmed)
+                    {
+                        Users.Remove(SelectedUser);
+                        await SaveUsersAsync();
+                        SelectedUser = Users.FirstOrDefault();
+                    }
+
+                    // Find the MainWindow to access its MainGrid
+                    var mainWindow = Application.Current.MainWindow as View.MainWindow;
+                    if (mainWindow?.MainGrid != null && mainWindow.MainGrid.Children.Contains(deleteOverlay))
+                    {
+                        // Apply fade-out animation
+                        var fadeOut = new System.Windows.Media.Animation.DoubleAnimation
+                        {
+                            From = 1,
+                            To = 0,
+                            Duration = TimeSpan.FromSeconds(0.2)
+                        };
+
+                        fadeOut.Completed += (s, e) =>
+                        {
+                            // Remove overlay when animation completes
+                            mainWindow.MainGrid.Children.Remove(deleteOverlay);
+                        };
+
+                        deleteOverlay.BeginAnimation(UIElement.OpacityProperty, fadeOut);
+                    }
+                };
+
+                // Find the MainWindow to access its MainGrid
+                var mainWindow = Application.Current.MainWindow as View.MainWindow;
+                if (mainWindow?.MainGrid != null)
+                {
+                    // Add overlay to the main grid
+                    mainWindow.MainGrid.Children.Add(deleteOverlay);
+
+                    // Apply fade-in animation
+                    var fadeIn = new System.Windows.Media.Animation.DoubleAnimation
+                    {
+                        From = 0,
+                        To = 1,
+                        Duration = TimeSpan.FromSeconds(0.3)
+                    };
+
+                    deleteOverlay.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+                    deleteOverlay.Focus();
                 }
             }
         }

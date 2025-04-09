@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              Height="Auto" Width="Auto">
     <UserControl.Background>
-        <ImageBrush ImageSource="/Images/background-image.jpg" Stretch="Fill"/>
+        <ImageBrush ImageSource="/Images/background-image.png" Stretch="Fill"/>
     </UserControl.Background>
     <UserControl.Resources>
         <Style x:Key="StyledButton" TargetType="Button">
@@ -256,7 +256,7 @@
                                            FontSize="20" 
                                            Foreground="#FFFFB200" 
                                            HorizontalAlignment="Center" 
-                                           Margin="0,0,0,10">   
+                                           Margin="0,0,0,10">
                                     <TextBlock.Effect>
                                         <DropShadowEffect Color="White" BlurRadius="10" ShadowDepth="0" RenderingBias="Quality"/>
                                     </TextBlock.Effect>

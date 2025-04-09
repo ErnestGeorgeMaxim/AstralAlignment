@@ -23,6 +23,15 @@ namespace AstralAlignment.Models
             ImagePath = $"{Value}.png";
         }
 
+        public MemoryCard(string value, string id, bool isFlipped = false, bool isMatched = false)
+        {
+            Value = value;
+            Id = id ?? Guid.NewGuid().ToString();
+            IsFlipped = isFlipped;
+            IsMatched = isMatched;
+            ImagePath = $"{Value}.png";
+        }
+
         public void Flip()
         {
             if (!IsMatched)

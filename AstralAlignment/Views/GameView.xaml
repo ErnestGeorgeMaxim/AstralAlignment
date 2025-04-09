@@ -8,38 +8,53 @@
              Height="Auto" Width="Auto">
 
     <UserControl.Background>
-        <ImageBrush ImageSource="/Images/background-image.jpg" Stretch="Fill"/>
+        <ImageBrush ImageSource="/Images/background-image.png" Stretch="Fill"/>
     </UserControl.Background>
 
     <UserControl.Resources>
         <!-- Button style consistent with GameSetUpView -->
         <Style x:Key="StyledButton" TargetType="Button">
-            <Setter Property="Width" Value="150"/>
-            <Setter Property="Height" Value="50"/>
-            <Setter Property="Background" Value="#FF404682"/>
-            <Setter Property="Foreground" Value="#FFFFB200"/>
             <Setter Property="FontFamily" Value="Castellar"/>
-            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Foreground" Value="#FFFFB200"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="#FF404682"/>
             <Setter Property="BorderBrush" Value="#FFFFB200"/>
-            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderThickness" Value="3"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
+                        <Grid>
+                            <!-- Blur Effect (Glow) -->
+                            <Border x:Name="GlowEffect"
+                                CornerRadius="10"
+                                Background="Transparent"
+                                Width="210"
+                                Height="60"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="White" BlurRadius="47" ShadowDepth="0" RenderingBias="Quality"/>
+                                </Border.Effect>
+                            </Border>
+                            <!-- Main Button -->
+                            <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="5">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            <Border.Effect>
-                                <DropShadowEffect Color="White" BlurRadius="10" ShadowDepth="0" RenderingBias="Quality"/>
-                            </Border.Effect>
-                        </Border>
+                                BorderThickness="3"
+                                CornerRadius="10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <!-- Hover & Click Effects -->
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#FF5F6BB7"/>
+                                <Setter TargetName="border" Property="Background" Value="#FF505CA5"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="#FF242D5B"/>
+                                <Setter TargetName="border" Property="Background" Value="#FF303560"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -52,15 +67,15 @@
             <Button Margin="5"
                     Command="{Binding DataContext.CardClickCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
                     CommandParameter="{Binding}">
-                                <Button.Template>
-                                    <ControlTemplate TargetType="Button">
-                                    <Border x:Name="CardBorder" 
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="CardBorder" 
                                 Background="#FF404682" 
                                 BorderBrush="#FFFFB200" 
                                 BorderThickness="2"
                                 CornerRadius="5"
                                 Width="{Binding DataContext.CardWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}"
-                                Height="{Binding DataContext.CardHeight, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}">    
+                                Height="{Binding DataContext.CardHeight, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}">
                             <Grid>
                                 <!-- Card Back (showing when not flipped) -->
                                 <Image x:Name="CardBack" 
@@ -123,10 +138,11 @@
 
             <!-- Game Info Panel -->
             <Border BorderBrush="#FFFFB200" BorderThickness="2" CornerRadius="10" Background="#88404682"
-                    Width="320" Height="70"
-                    HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,80,0,0">
+                    Width="500" Height="72"
+                    HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,78,0,0">
                 <Grid Margin="10,5">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -136,7 +152,7 @@
                     <StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Center">
                         <TextBlock Text="Moves" 
                                    FontFamily="Castellar" 
-                                   FontSize="16" 
+                                   FontSize="15" 
                                    Foreground="#FFFFB200" 
                                    HorizontalAlignment="Center"/>
                         <TextBlock Text="{Binding Moves}" 
@@ -146,13 +162,13 @@
                                    HorizontalAlignment="Center"/>
                     </StackPanel>
 
-                    <!-- Timer -->
+                    <!-- Elapsed Time -->
                     <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center">
-                        <TextBlock Text="Time" 
+                        <TextBlock Text="Elapsed" 
                                    FontFamily="Castellar" 
-                                   FontSize="16" 
+                                   FontSize="15" 
                                    Foreground="#FFFFB200" 
-                                   HorizontalAlignment="Center"/>
+                                   Height="19"/>
                         <TextBlock Text="{Binding ElapsedTimeDisplay}" 
                                    FontFamily="Castellar" 
                                    FontSize="20" 
@@ -160,11 +176,35 @@
                                    HorizontalAlignment="Center"/>
                     </StackPanel>
 
-                    <!-- Matches -->
+                    <!-- Remaining Time -->
                     <StackPanel Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Center">
+                        <TextBlock Text="Remaining" 
+                                   FontFamily="Castellar" 
+                                   FontSize="15" 
+                                   Foreground="#FFFFB200" 
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding TimeDisplay}" 
+                                   FontFamily="Castellar" 
+                                   FontSize="20"
+                                   HorizontalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="#FFFFB200"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsTimeAlmostExpired}" Value="True">
+                                            <Setter Property="Foreground" Value="#FFFF0000"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <!-- Matches -->
+                    <StackPanel Grid.Column="3" Orientation="Vertical" HorizontalAlignment="Center">
                         <TextBlock Text="Matches" 
                                    FontFamily="Castellar" 
-                                   FontSize="16" 
+                                   FontSize="15" 
                                    Foreground="#FFFFB200" 
                                    HorizontalAlignment="Center"/>
                         <TextBlock Text="{Binding MatchesDisplay}" 

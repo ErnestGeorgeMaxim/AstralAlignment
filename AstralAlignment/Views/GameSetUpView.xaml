@@ -8,41 +8,56 @@
              Height="Auto" Width="Auto">
 
     <UserControl.Background>
-        <ImageBrush ImageSource="/Images/background-image.jpg" Stretch="Fill"/>
+        <ImageBrush ImageSource="/Images/background-image.png" Stretch="Fill"/>
     </UserControl.Background>
 
     <UserControl.Resources>
-        <!-- Built-in converter, no need to create it -->
+        <!-- Built-in converters -->
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
-        <!-- Button style -->
+        <!-- Button style matching ProfileView -->
         <Style x:Key="StyledButton" TargetType="Button">
-            <Setter Property="Width" Value="150"/>
-            <Setter Property="Height" Value="50"/>
-            <Setter Property="Background" Value="#FF404682"/>
-            <Setter Property="Foreground" Value="#FFFFB200"/>
             <Setter Property="FontFamily" Value="Castellar"/>
-            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Foreground" Value="#FFFFB200"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="#FF404682"/>
             <Setter Property="BorderBrush" Value="#FFFFB200"/>
-            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderThickness" Value="3"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
+                        <Grid>
+                            <!-- Blur Effect (Glow) -->
+                            <Border x:Name="GlowEffect"
+                                CornerRadius="10"
+                                Background="Transparent"
+                                Width="210"
+                                Height="60"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="White" BlurRadius="47" ShadowDepth="0" RenderingBias="Quality"/>
+                                </Border.Effect>
+                            </Border>
+                            <!-- Main Button -->
+                            <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="5">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            <Border.Effect>
-                                <DropShadowEffect Color="White" BlurRadius="10" ShadowDepth="0" RenderingBias="Quality"/>
-                            </Border.Effect>
-                        </Border>
+                                BorderThickness="3"
+                                CornerRadius="10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <!-- Hover & Click Effects -->
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#FF5F6BB7"/>
+                                <Setter TargetName="border" Property="Background" Value="#FF505CA5"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="#FF242D5B"/>
+                                <Setter TargetName="border" Property="Background" Value="#FF303560"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -58,7 +73,7 @@
                        FontSize="44"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Top"
-                       Margin="0,50,0,0"
+                       Margin="0,59,0,0"
                        Foreground="#FFFFB200"
                        Width="400"
                        FontFamily="Castellar"
@@ -70,7 +85,7 @@
 
             <!-- Main content panel -->
             <Border BorderBrush="#FFFFB200" BorderThickness="3" CornerRadius="10" Background="#44404682"
-                    Margin="100,120,100,120">
+                    Margin="74,176,74,101">
                 <Border.Effect>
                     <DropShadowEffect Color="White" BlurRadius="20" ShadowDepth="0" RenderingBias="Quality"/>
                 </Border.Effect>
@@ -134,7 +149,7 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <!-- Custom Game Settings - Simplified approach -->
+                    <!-- Custom Game Settings -->
                     <StackPanel Grid.Row="2" Visibility="{Binding IsCustomMode, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <TextBlock Text="Custom Board Size:"
                                    FontFamily="Castellar"
@@ -155,102 +170,81 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <!-- Rows setting - Simplified binding -->
+                            <!-- Rows setting -->
                             <TextBlock Grid.Row="0" Grid.Column="0"
-                                       Text="Rows (2-6):"
+                                       Text="Rows:"
                                        FontFamily="Castellar"
                                        FontSize="20"
                                        Foreground="#FFFFB200"
                                        Margin="0,0,20,0"
                                        VerticalAlignment="Center"/>
+
+                            <!-- Rows ComboBox with dynamic ItemsSource -->
                             <ComboBox Grid.Row="0" Grid.Column="1"
-                                      SelectedIndex="{Binding RowsIndex}"
+                                      ItemsSource="{Binding SizesSource}"
+                                      SelectedItem="{Binding Rows}"
                                       Width="80"
                                       Height="40"
                                       FontFamily="Castellar"
                                       FontSize="18"
-                                      Margin="0,0,0,10">
-                                <ComboBoxItem>2</ComboBoxItem>
-                                <ComboBoxItem>3</ComboBoxItem>
-                                <ComboBoxItem>4</ComboBoxItem>
-                                <ComboBoxItem>5</ComboBoxItem>
-                                <ComboBoxItem>6</ComboBoxItem>
-                            </ComboBox>
+                                      Margin="0,0,0,10"/>
 
-                            <!-- Columns setting - Simplified binding -->
+                            <!-- Columns setting -->
                             <TextBlock Grid.Row="1" Grid.Column="0"
-                                       Text="Columns (2-6):"
+                                       Text="Columns:"
                                        FontFamily="Castellar"
                                        FontSize="20"
                                        Foreground="#FFFFB200"
                                        Margin="0,0,20,0"
                                        VerticalAlignment="Center"/>
+
+                            <!-- Columns ComboBox with dynamic ItemsSource -->
                             <ComboBox Grid.Row="1" Grid.Column="1"
-                                      SelectedIndex="{Binding ColumnsIndex}"
+                                      ItemsSource="{Binding SizesSource}"
+                                      SelectedItem="{Binding Columns}"
                                       Width="80"
                                       Height="40"
                                       FontFamily="Castellar"
-                                      FontSize="18">
-                                <ComboBoxItem>2</ComboBoxItem>
-                                <ComboBoxItem>3</ComboBoxItem>
-                                <ComboBoxItem>4</ComboBoxItem>
-                                <ComboBoxItem>5</ComboBoxItem>
-                                <ComboBoxItem>6</ComboBoxItem>
-                            </ComboBox>
+                                      FontSize="18"
+                                      Margin="0,0,0,10"/>
+
+                            <!-- Time Limit Setting -->
+                            <TextBlock Grid.Row="2" Grid.Column="0"
+                                       Text="Time Limit (min):"
+                                       FontFamily="Castellar"
+                                       FontSize="20"
+                                       Foreground="#FFFFB200"
+                                       Margin="0,0,20,0"
+                                       VerticalAlignment="Center"/>
+
+                            <!-- Time ComboBox -->
+                            <ComboBox Grid.Row="2" Grid.Column="1"
+                                      ItemsSource="{Binding TimeOptions}"
+                                      SelectedItem="{Binding TimeLimitMinutes}"
+                                      Width="80"
+                                      Height="40"
+                                      FontFamily="Castellar"
+                                      FontSize="18"/>
                         </Grid>
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <!-- Menu Bar -->
-            <DockPanel VerticalAlignment="Top" Height="30">
-                <Menu DockPanel.Dock="Top" Background="#FF404682" Foreground="#FFFFB200" FontFamily="Castellar">
-                    <MenuItem Header="File">
-                        <MenuItem Header="Category" ItemsSource="{Binding Categories}">
-                            <MenuItem.ItemContainerStyle>
-                                <Style TargetType="MenuItem">
-                                    <Setter Property="Header" Value="{Binding}"/>
-                                    <Setter Property="Command" Value="{Binding DataContext.SelectCategoryCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Menu}}}"/>
-                                    <Setter Property="CommandParameter" Value="{Binding}"/>
-                                </Style>
-                            </MenuItem.ItemContainerStyle>
-                        </MenuItem>
-                        <Separator />
-                        <MenuItem Header="New Game" Command="{Binding NewGameCommand}"/>
-                        <MenuItem Header="Open Game" Command="{Binding OpenGameCommand}"/>
-                        <MenuItem Header="Save Game" Command="{Binding SaveGameCommand}"/>
-                        <Separator />
-                        <MenuItem Header="Statistics" Command="{Binding ViewStatisticsCommand}"/>
-                        <Separator />
-                        <MenuItem Header="Exit" Command="{Binding ExitCommand}"/>
-                    </MenuItem>
-
-                    <MenuItem Header="Options">
-                        <MenuItem Header="Standard (4x4)" IsCheckable="True" IsChecked="{Binding IsStandardMode}"/>
-                        <MenuItem Header="Custom" IsCheckable="True" IsChecked="{Binding IsCustomMode}"/>
-                    </MenuItem>
-
-                    <MenuItem Header="Help">
-                        <MenuItem Header="About">
-                            <!-- Fixed: Replace RelayCommand with proper binding or implement code-behind event -->
-                            <MenuItem.Command>
-                                <Binding Path="ShowAboutCommand"/>
-                            </MenuItem.Command>
-                        </MenuItem>
-                    </MenuItem>
-                </Menu>
-            </DockPanel>
-
-            <!-- Bottom buttons -->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,50">
+            <!-- Bottom buttons - Now with added Statistics button and matching ProfileView style -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,685,0,0">
                 <Button Content="NEW GAME"
                         Command="{Binding NewGameCommand}"
                         Style="{StaticResource StyledButton}" 
-                        Margin="15,0"/>
+                        Margin="15,0" />
                 <Button Content="LOAD GAME"
                         Command="{Binding OpenGameCommand}"
+                        Style="{StaticResource StyledButton}" 
+                        Margin="15,0"/>
+                <Button Content="STATISTICS"
+                        Command="{Binding ViewStatisticsCommand}"
                         Style="{StaticResource StyledButton}" 
                         Margin="15,0"/>
                 <Button Content="EXIT"

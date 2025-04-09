@@ -15,11 +15,17 @@ namespace AstralAlignment.Models
         public List<MemoryCard> Cards { get; }
         public int Moves { get; set; }
         public int MatchesFound { get; set; }
-        public DateTime StartTime { get; }
+        public DateTime StartTime { get; private set; }
         public TimeSpan ElapsedTime { get; set; }
         public bool IsCompleted { get; set; }
 
-        public MemoryGame(User player, string category, int rows, int columns)
+        // New properties for time limit
+        public TimeSpan TimeLimit { get; }
+        public TimeSpan RemainingTime => TimeLimit - ElapsedTime;
+        public bool IsTimeExpired => ElapsedTime >= TimeLimit;
+
+        // Constructor with time limit parameter
+        public MemoryGame(User player, string category, int rows, int columns, TimeSpan timeLimit)
         {
             Player = player;
             Category = category;
@@ -30,15 +36,58 @@ namespace AstralAlignment.Models
             MatchesFound = 0;
             StartTime = DateTime.Now;
             IsCompleted = false;
+            TimeLimit = timeLimit;
 
             // Debug information
-            Debug.WriteLine($"Creating new game with dimensions: {rows}x{columns}");
+            Debug.WriteLine($"Creating new game with dimensions: {rows}x{columns} and time limit: {timeLimit.TotalMinutes} minutes");
 
             // Initialize the game board
             InitializeCards();
 
             // Debug confirmation
             Debug.WriteLine($"Game initialized with {Cards.Count} cards");
+        }
+
+        // Constructor overload for backward compatibility
+        public MemoryGame(User player, string category, int rows, int columns)
+            : this(player, category, rows, columns, TimeSpan.FromMinutes(1)) // Default 3 minutes
+        {
+        }
+
+        // Constructor for restoring a saved game
+        public MemoryGame(User player, string category, int rows, int columns, TimeSpan timeLimit, List<MemoryCard> savedCards)
+        {
+            Player = player;
+            Category = category;
+            Rows = rows;
+            Columns = columns;
+            TimeLimit = timeLimit;
+            StartTime = DateTime.Now;
+            IsCompleted = false;
+            Moves = 0;
+            MatchesFound = 0;
+
+            // Use the saved cards if provided, otherwise initialize new ones
+            if (savedCards != null && savedCards.Count == rows * columns)
+            {
+                Cards = savedCards;
+
+                // Count matched pairs
+                MatchesFound = Cards.Count(c => c.IsMatched) / 2;
+                Debug.WriteLine($"Loaded game with {Cards.Count} cards, {MatchesFound} matches found");
+            }
+            else
+            {
+                Cards = new List<MemoryCard>();
+                InitializeCards();
+                Debug.WriteLine($"Created new cards for loaded game");
+            }
+        }
+
+        // Explicitly update the start time
+        public void UpdateStartTime(TimeSpan elapsedTime)
+        {
+            StartTime = DateTime.Now.Subtract(elapsedTime);
         }
 
         private void InitializeCards()
@@ -77,22 +126,23 @@ namespace AstralAlignment.Models
             {
                 case "Zodiac Signs":
                     pairs.AddRange(new List<string> {
-                "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
-                "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"
-            }.Take(pairsCount));
+                        "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+                        "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"
+                }.Take(pairsCount));
                     break;
                 case "Celestial Bodies":
                     pairs.AddRange(new List<string> {
-                "Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter",
-                "Saturn", "Uranus", "Neptune", "Pluto", "Moon", "Comet",
-                "Void", "Sedna", "Deimos", "Eris", "Ceres", "Europa"
-            }.Take(pairsCount));
+                        "Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter",
+                        "Saturn", "Uranus", "Neptune", "Pluto", "Moon", "Comet",
+                        "Void", "Sedna", "Deimos", "Eris", "Ceres", "Europa"
+                }.Take(pairsCount));
                     break;
                 case "Constellations":
                     pairs.AddRange(new List<string> {
-                "Ursa Major", "Orion", "Cassiopeia", "Draco", "Pegasus", "Perseus",
-                "Andromeda", "Cygnus", "Lyra", "Centaurus", "Hercules", "Aquila"
-            }.Take(pairsCount));
+                        "UrsaMajor", "Orion", "Cassiopeia", "Draco", "Pegasus", "Perseus",
+                        "Andromeda", "Cygnus", "Lyra", "Centaurus", "Hercules", "Aquila",
+                        "Delphinus", "Vulpecula", "Lacerta", "Cepheus", "Bootes", "CanisMajor"
+                }.Take(pairsCount));
                     break;
                 default:
                     // Default to numbers if no category matches

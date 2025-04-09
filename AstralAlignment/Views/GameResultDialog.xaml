@@ -1,0 +1,252 @@
+﻿<UserControl x:Class="AstralAlignment.Views.GameResultDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AstralAlignment.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="768" d:DesignWidth="1024">
+
+    <UserControl.Resources>
+        <!-- Button style matching the application's theme -->
+        <Style x:Key="StyledButton" TargetType="Button">
+            <Setter Property="FontFamily" Value="Castellar"/>
+            <Setter Property="Foreground" Value="#FFFFB200"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="#FF404682"/>
+            <Setter Property="BorderBrush" Value="#FFFFB200"/>
+            <Setter Property="BorderThickness" Value="3"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <!-- Blur Effect (Glow) -->
+                            <Border x:Name="GlowEffect"
+                                CornerRadius="10"
+                                Background="Transparent"
+                                Width="210"
+                                Height="60"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="White" BlurRadius="47" ShadowDepth="0" RenderingBias="Quality"/>
+                                </Border.Effect>
+                            </Border>
+                            <!-- Main Button -->
+                            <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="3"
+                                CornerRadius="10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <!-- Hover & Click Effects -->
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF505CA5"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF303560"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <!-- Semi-transparent background overlay -->
+    <Grid Background="#80000000">
+        <!-- Dialog container -->
+        <Border Width="715" Height="416"
+                CornerRadius="15" 
+                BorderThickness="3" 
+                BorderBrush="#FFFFB200" 
+                Background="#FF404682"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+            <Border.Effect>
+                <DropShadowEffect Color="#FFFFB200" BlurRadius="15" ShadowDepth="0" Opacity="0.7"/>
+            </Border.Effect>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" MinHeight="83"/>
+                    <RowDefinition Height="Auto" MinHeight="26"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Dialog Header -->
+                <TextBlock 
+                           x:Name="HeaderText"
+                           Text="VICTORY" 
+                           FontFamily="Castellar" 
+                           FontSize="36" 
+                           Foreground="#FFFFB200"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" Height="42" Width="194">
+                    <TextBlock.Effect>
+                        <DropShadowEffect Color="White" BlurRadius="15" ShadowDepth="0"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+
+                <!-- Star icon for wins or other icon for losses -->
+                <Canvas Grid.Row="1" Width="100" HorizontalAlignment="Center" Margin="0,1,0,10">
+                    <!-- Victory Star (visible for wins) -->
+                    <Path x:Name="VictoryStar" 
+                          Visibility="Collapsed"
+                          Fill="#FFFFB200" 
+                          Stroke="White" 
+                          StrokeThickness="1">
+                        <Path.Data>
+                            <PathGeometry>
+                                <PathFigure StartPoint="50,0">
+                                    <LineSegment Point="61,35" />
+                                    <LineSegment Point="98,35" />
+                                    <LineSegment Point="68,57" />
+                                    <LineSegment Point="79,91" />
+                                    <LineSegment Point="50,70" />
+                                    <LineSegment Point="21,91" />
+                                    <LineSegment Point="32,57" />
+                                    <LineSegment Point="2,35" />
+                                    <LineSegment Point="39,35" />
+                                    <LineSegment Point="50,0" />
+                                </PathFigure>
+                            </PathGeometry>
+                        </Path.Data>
+                        <Path.Effect>
+                            <DropShadowEffect Color="White" BlurRadius="15" ShadowDepth="0"/>
+                        </Path.Effect>
+                    </Path>
+
+                    <!-- Loss Icon (hourglass - visible for losses) -->
+                    <Path x:Name="LossIcon" 
+                          Visibility="Collapsed"
+                          Fill="#FFFF4500" 
+                          Stroke="White" 
+                          StrokeThickness="1">
+                        <Path.Data>
+                            <PathGeometry>
+                                <PathFigure StartPoint="20,10">
+                                    <LineSegment Point="80,10" />
+                                    <LineSegment Point="80,20" />
+                                    <LineSegment Point="60,50" />
+                                    <LineSegment Point="80,80" />
+                                    <LineSegment Point="80,90" />
+                                    <LineSegment Point="20,90" />
+                                    <LineSegment Point="20,80" />
+                                    <LineSegment Point="40,50" />
+                                    <LineSegment Point="20,20" />
+                                    <LineSegment Point="20,10" />
+                                </PathFigure>
+                            </PathGeometry>
+                        </Path.Data>
+                        <Path.Effect>
+                            <DropShadowEffect Color="White" BlurRadius="15" ShadowDepth="0"/>
+                        </Path.Effect>
+                    </Path>
+                </Canvas>
+
+                <!-- Game Stats Message -->
+                <StackPanel Grid.Row="2" Margin="50,8,50,0">
+                    <TextBlock x:Name="MessageText"
+                               Text="Congratulations! 
+                                     The stars have aligned!" 
+                               FontFamily="Castellar" 
+                               FontSize="22" 
+                               Foreground="White"
+                               HorizontalAlignment="Center" 
+                               TextAlignment="Center"
+                               TextWrapping="Wrap" Width="608">
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="White" BlurRadius="5" ShadowDepth="0" Opacity="0.5"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+
+                    <!-- Game Stats -->
+                    <Grid Margin="0,20,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Elapsed Time -->
+                        <TextBlock Grid.Row="0" Grid.Column="0" 
+                                   Text="Time:"
+                                   FontFamily="Castellar" 
+                                   FontSize="18" 
+                                   Foreground="#FFFFB200"
+                                   HorizontalAlignment="Right"
+                                   Margin="0,0,10,5"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" 
+                                   x:Name="TimeText"
+                                   Text="00:00"
+                                   FontFamily="Castellar" 
+                                   FontSize="18" 
+                                   Foreground="White"
+                                   HorizontalAlignment="Left"
+                                   Margin="10,0,0,5"/>
+
+                        <!-- Moves -->
+                        <TextBlock Grid.Row="1" Grid.Column="0" 
+                                   Text="Moves:"
+                                   FontFamily="Castellar" 
+                                   FontSize="18" 
+                                   Foreground="#FFFFB200"
+                                   HorizontalAlignment="Right"
+                                   Margin="0,0,10,5"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" 
+                                   x:Name="MovesText"
+                                   Text="0"
+                                   FontFamily="Castellar" 
+                                   FontSize="18" 
+                                   Foreground="White"
+                                   HorizontalAlignment="Left"
+                                   Margin="10,0,0,5"/>
+
+                        <!-- Matches -->
+                        <TextBlock Grid.Row="2" Grid.Column="0" 
+                                   Text="Matches:"
+                                   FontFamily="Castellar" 
+                                   FontSize="18" 
+                                   Foreground="#FFFFB200"
+                                   HorizontalAlignment="Right"
+                                   Margin="0,0,10,5"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" 
+                                   x:Name="MatchesText"
+                                   Text="0/0"
+                                   FontFamily="Castellar" 
+                                   FontSize="18" 
+                                   Foreground="White"
+                                   HorizontalAlignment="Left"
+                                   Margin="10,0,0,5"/>
+                    </Grid>
+                </StackPanel>
+
+                <!-- Dialog Buttons -->
+                <StackPanel Grid.Row="3" 
+                           Orientation="Horizontal" 
+                           HorizontalAlignment="Center"
+                           Margin="0,10,0,30" Width="220">
+                    <!-- New Game Button -->
+                    <Button Content="NEW GAME" 
+                           Style="{StaticResource StyledButton}"
+                           Margin="10,0,30,0"
+                           Click="NewGameButton_Click"/>
+
+                    <!-- Exit Button -->
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

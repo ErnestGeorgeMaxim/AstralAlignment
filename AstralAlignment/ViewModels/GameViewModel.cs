@@ -8,8 +8,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
-using System.Windows.Media.Imaging;
 using System.Diagnostics;
+using AstralAlignment.Views;
 
 namespace AstralAlignment.ViewModels
 {
@@ -24,6 +24,30 @@ namespace AstralAlignment.ViewModels
         // Card dimension properties
         private double _cardWidth = 120;
         private double _cardHeight = 174;
+
+        // New property for time display
+        private string _timeDisplay;
+        public string TimeDisplay
+        {
+            get => _timeDisplay;
+            set
+            {
+                _timeDisplay = value;
+                OnPropertyChanged(nameof(TimeDisplay));
+            }
+        }
+
+        // New property for time color
+        private bool _isTimeAlmostExpired;
+        public bool IsTimeAlmostExpired
+        {
+            get => _isTimeAlmostExpired;
+            set
+            {
+                _isTimeAlmostExpired = value;
+                OnPropertyChanged(nameof(IsTimeAlmostExpired));
+            }
+        }
 
         // Properties for card dimensions
         public double CardWidth
@@ -57,6 +81,9 @@ namespace AstralAlignment.ViewModels
         public string MatchesDisplay => $"{_game.MatchesFound}/{_game.Cards.Count / 2}";
         public string ElapsedTimeDisplay => $"{_game.ElapsedTime.Minutes:D2}:{_game.ElapsedTime.Seconds:D2}";
 
+        // Time limit for display
+        public string TimeLimitDisplay => $"{(int)_game.TimeLimit.TotalMinutes:D2}:{_game.TimeLimit.Seconds:D2}";
+
         // Commands
         public ICommand CardClickCommand { get; }
         public ICommand NewGameCommand { get; }
@@ -69,7 +96,7 @@ namespace AstralAlignment.ViewModels
             _gameService = new GameService();
 
             // Debug information about game settings
-            Debug.WriteLine($"Creating GameViewModel with rows: {_game.Rows}, columns: {_game.Columns}");
+            Debug.WriteLine($"Creating GameViewModel with rows: {_game.Rows}, columns: {_game.Columns}, time limit: {_game.TimeLimit.TotalMinutes} minutes");
             Debug.WriteLine($"Total cards in game: {_game.Cards.Count}");
 
             // Initialize card view models
@@ -80,6 +107,9 @@ namespace AstralAlignment.ViewModels
 
             // Initialize card view models
             InitializeCardViewModels();
+
+            // Initialize timer display
+            UpdateTimeDisplay();
 
             // Initialize timer
             _timer = new DispatcherTimer
@@ -163,6 +193,10 @@ namespace AstralAlignment.ViewModels
                 string imagePath = $"/Images/{folderName}/{fileName}.png";
                 cardViewModel.ImageSource = imagePath;
 
+                // Ensure card state is properly reflected in view model
+                cardViewModel.IsFlipped = card.IsFlipped;
+                cardViewModel.IsMatched = card.IsMatched;
+
                 Cards.Add(cardViewModel);
             }
 
@@ -173,13 +207,39 @@ namespace AstralAlignment.ViewModels
         {
             if (!_game.IsCompleted)
             {
+                // Update elapsed time
                 _game.ElapsedTime = DateTime.Now - _game.StartTime;
                 OnPropertyChanged(nameof(ElapsedTimeDisplay));
+
+                // Update time display with remaining time
+                UpdateTimeDisplay();
+
+                // Check if time expired
+                if (_game.IsTimeExpired && !_game.IsCompleted)
+                {
+                    GameLost();
+                }
             }
+        }
+
+        private void UpdateTimeDisplay()
+        {
+            // Calculate remaining time
+            TimeSpan remaining = _game.RemainingTime;
+
+            // Format display with minutes and seconds
+            TimeDisplay = $"{Math.Max(0, (int)remaining.TotalMinutes):D2}:{Math.Max(0, remaining.Seconds):D2}";
+
+            // Set warning flag if less than 20% of time remains
+            IsTimeAlmostExpired = remaining.TotalSeconds < (_game.TimeLimit.TotalSeconds * 0.2);
         }
 
         private void OnCardClick(object parameter)
         {
+            // Don't allow card flips if time has expired
+            if (_game.IsTimeExpired)
+                return;
+
             if (_isProcessingTurn)
                 return;
 
@@ -233,7 +293,7 @@ namespace AstralAlignment.ViewModels
                 // Check if game is completed
                 if (_game.MatchesFound >= _game.Cards.Count / 2)
                 {
-                    GameCompleted();
+                    GameWon();
                 }
             }
 
@@ -242,10 +302,20 @@ namespace AstralAlignment.ViewModels
             _isProcessingTurn = false;
         }
 
+        private void CleanupResources()
+        {
+            // Stop the timer if it's running
+            if (_timer != null && _timer.IsEnabled)
+            {
+                _timer.Stop();
+                Debug.WriteLine("Timer stopped during cleanup");
+            }
+        }
+
         private async void ProcessMismatch(CardViewModel secondCard)
         {
             // Wait before flipping back
-            await System.Threading.Tasks.Task.Delay(1000);
+            await System.Threading.Tasks.Task.Delay(400);
 
             // Flip both cards back
             var firstCardViewModel = Cards.FirstOrDefault(c => c.Card == _firstCard);
@@ -260,10 +330,10 @@ namespace AstralAlignment.ViewModels
             _isProcessingTurn = false;
         }
 
-        private void GameCompleted()
+        private void GameWon()
         {
             _game.IsCompleted = true;
-            _timer.Stop();
+            CleanupResources(); // Make sure to stop the timer
 
             // Create game result for statistics
             var result = new GameResult
@@ -280,10 +350,90 @@ namespace AstralAlignment.ViewModels
             // Update statistics asynchronously
             _ = _gameService.UpdateStatisticsAsync(_game.Player, result);
 
-            // Show completion message
-            MessageBox.Show($"Congratulations! You completed the game in {ElapsedTimeDisplay} with {Moves} moves.",
-                "Game Completed", MessageBoxButton.OK, MessageBoxImage.Information);
+            // Show game result dialog instead of MessageBox
+            ShowGameResultDialog(true);
         }
+
+        private void GameLost()
+        {
+            _game.IsCompleted = true;
+            CleanupResources(); // Make sure to stop the timer
+
+            // Create game result for statistics - loss
+            var result = new GameResult
+            {
+                Category = _game.Category,
+                Rows = _game.Rows,
+                Columns = _game.Columns,
+                Moves = _game.Moves,
+                Duration = _game.ElapsedTime,
+                IsWon = false,
+                Date = DateTime.Now
+            };
+
+            // Update statistics asynchronously
+            _ = _gameService.UpdateStatisticsAsync(_game.Player, result);
+
+            // Show game result dialog instead of MessageBox
+            ShowGameResultDialog(false);
+        }
+
+        private void ShowGameResultDialog(bool isWon)
+        {
+            try
+            {
+                // Get the main window view model
+                var mainVM = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+                if (mainVM != null)
+                {
+                    // Create the game result dialog with current game stats
+                    // Enable auto-redirect by default
+                    var resultDialog = new GameResultDialog(
+                        isWon,
+                        ElapsedTimeDisplay,
+                        Moves,
+                        MatchesDisplay
+                    );
+
+                    // Subscribe to action selected event
+                    resultDialog.ActionSelected += (sender, action) =>
+                    {
+                        // Clear the dialog from view
+                        mainVM.DialogContent = null;
+
+                        if (action == GameResultDialog.GameResultAction.NewGame)
+                        {
+                            StartNewGame();
+                        }
+                        else
+                        {
+                            ReturnToSetup();
+                        }
+                    };
+
+                    // Show the dialog by adding it to the main window's content
+                    mainVM.DialogContent = resultDialog;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error showing game result dialog: {ex.Message}");
+
+                // Fallback to message box if dialog fails
+                string message = isWon
+                    ? $"Congratulations! You completed the game in {ElapsedTimeDisplay} with {Moves} moves."
+                    : $"Time's up! You found {_game.MatchesFound} out of {_game.Cards.Count / 2} matches.";
+
+                MessageBox.Show(message,
+                    isWon ? "Game Completed" : "Game Over",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+
+                // Return to game setup view as fallback
+                ReturnToSetup();
+            }
+        }
+
 
         private bool CanClickCard(object parameter)
         {
@@ -291,11 +441,15 @@ namespace AstralAlignment.ViewModels
                    !cardViewModel.IsFlipped &&
                    !cardViewModel.IsMatched &&
                    !_game.IsCompleted &&
-                   !_isProcessingTurn;
+                   !_isProcessingTurn &&
+                   !_game.IsTimeExpired;
         }
 
         private void StartNewGame()
         {
+            // Clean up resources before starting a new game
+            CleanupResources();
+
             // Navigate back to setup and start new game with same user
             var mainVM = Application.Current.MainWindow.DataContext as MainWindowViewModel;
             if (mainVM != null)
@@ -318,17 +472,30 @@ namespace AstralAlignment.ViewModels
             if (dialog.ShowDialog() == true)
             {
                 await _gameService.SaveGameAsync(_game, dialog.FileName);
+                MessageBox.Show("Game saved successfully!", "Save Game", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
         private void ReturnToSetup()
         {
-            // Navigate back to setup
-            var mainVM = Application.Current.MainWindow.DataContext as MainWindowViewModel;
-            if (mainVM != null)
+            try
             {
-                var setupView = new Views.GameSetUpView(_game.Player);
-                mainVM.CurrentView = setupView;
+                // Clean up resources before navigating away
+                CleanupResources();
+
+                // Navigate back to setup with the current user
+                var mainVM = Application.Current.MainWindow.DataContext as MainWindowViewModel;
+                if (mainVM != null)
+                {
+                    var setupView = new Views.GameSetUpView(_game.Player);
+                    mainVM.CurrentView = setupView;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error returning to GameSetUpView: {ex.Message}");
+                MessageBox.Show($"Error returning to game setup: {ex.Message}",
+                    "Navigation Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -367,7 +534,9 @@ namespace AstralAlignment.ViewModels
                 {
                     _isFlipped = value;
                     OnPropertyChanged(nameof(IsFlipped));
-                    if (value)
+
+                    // Make sure the underlying card model is updated
+                    if (value != Card.IsFlipped)
                     {
                         Card.Flip();
                     }
@@ -384,6 +553,12 @@ namespace AstralAlignment.ViewModels
                 {
                     _isMatched = value;
                     OnPropertyChanged(nameof(IsMatched));
+
+                    // Make sure the underlying card model is updated
+                    if (value && !Card.IsMatched)
+                    {
+                        Card.SetMatched();
+                    }
                 }
             }
         }
@@ -391,6 +566,8 @@ namespace AstralAlignment.ViewModels
         public CardViewModel(MemoryCard card)
         {
             Card = card ?? throw new ArgumentNullException(nameof(card));
+
+            // Initialize view model state from the card model
             _isFlipped = card.IsFlipped;
             _isMatched = card.IsMatched;
         }
