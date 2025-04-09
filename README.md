@@ -31,3 +31,9 @@
 
 - **User Deletion**
   - Removes user profile, avatar, saved games, and stats
+ 
+
+
+
+https://github.com/user-attachments/assets/d66bd304-cc5c-42e0-be4d-d6ecbda7a1e3
+
